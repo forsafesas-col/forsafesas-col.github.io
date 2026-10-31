@@ -14,10 +14,9 @@ const CATEGORIA_FOTO = {
   cabeza: 'casco',
   ojos: 'gafas',
   oidos: 'tapones',
-  respiratoria: 'mascara-3m',
+  respiratoria: 'mascara-facial',
   manos: 'guantes-nitrilo',
   pies: 'bota',
-  desechables: 'tapabocas',
   emergencias: 'botiquin',
 };
 
@@ -25,6 +24,8 @@ const CATEGORIA_FOTO = {
 
 let quote = {};
 try { quote = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch (e) { quote = {}; }
+// Descarta productos que ya no existen en el catálogo
+Object.keys(quote).forEach((id) => { if (!byId(id)) delete quote[id]; });
 
 function saveQuote() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(quote)); } catch (e) { /* sin almacenamiento */ }
@@ -96,12 +97,11 @@ function cardHTML(p) {
         ${extra ? `<span class="card-photos">${cameraIcon}${p.fotos}</span>` : ''}
       </button>
       <div class="card-body">
-        <span class="card-brand">${p.marca || ''}</span>
         <h3>${p.nombre}</h3>
         <p>${p.descripcion}</p>
         <div class="card-actions">
           <button class="btn-add" type="button" data-add="${p.id}">+ Cotizar</button>
-          <a class="btn-wa-square" href="${waUrl(`Hola Forsafe 👋, quiero información sobre: ${p.nombre}${p.marca ? ` (${p.marca})` : ''}.`)}" target="_blank" rel="noopener" aria-label="Preguntar por ${p.nombre} en WhatsApp">${waIcon}</a>
+          <a class="btn-wa-square" href="${waUrl(`Hola Forsafe 👋, quiero información sobre: ${p.nombre}.`)}" target="_blank" rel="noopener" aria-label="Preguntar por ${p.nombre} en WhatsApp">${waIcon}</a>
         </div>
       </div>
     </article>`;
@@ -112,7 +112,7 @@ function renderGrid() {
   const list = PRODUCTOS.filter((p) => {
     if (filter !== 'todos' && p.categoria !== filter) return false;
     if (!term) return true;
-    const haystack = normalize([p.nombre, p.marca, p.descripcion, CATEGORIAS[p.categoria], ...p.detalles].join(' '));
+    const haystack = normalize([p.nombre, p.descripcion, CATEGORIAS[p.categoria], ...p.detalles].join(' '));
     return haystack.includes(term);
   });
   grid.innerHTML = list.map(cardHTML).join('');
@@ -172,10 +172,9 @@ function openProduct(id) {
   currentProduct = p;
   document.getElementById('pm-cat').textContent = CATEGORIAS[p.categoria];
   document.getElementById('pm-title').textContent = p.nombre;
-  document.getElementById('pm-brand').textContent = p.marca ? `Marca: ${p.marca}` : '';
   document.getElementById('pm-desc').textContent = p.descripcion;
   document.getElementById('pm-details').innerHTML = p.detalles.map((d) => `<li>${d}</li>`).join('');
-  document.getElementById('pm-wa').href = waUrl(`Hola Forsafe 👋, quiero información sobre: ${p.nombre}${p.marca ? ` (${p.marca})` : ''}.`);
+  document.getElementById('pm-wa').href = waUrl(`Hola Forsafe 👋, quiero información sobre: ${p.nombre}.`);
   pmThumbs.innerHTML = p.fotos > 1
     ? Array.from({ length: p.fotos }, (_, i) => `<button type="button" data-photo="${i + 1}" aria-label="Ver foto ${i + 1}"><img src="${foto(p.id, i + 1, 'sm')}" alt=""></button>`).join('')
     : '';
@@ -265,7 +264,7 @@ document.getElementById('send-quote').addEventListener('click', () => {
   const lines = ['Hola Forsafe 👋, quiero cotizar los siguientes productos:', ''];
   Object.entries(quote).forEach(([id, qty]) => {
     const p = byId(id);
-    if (p) lines.push(`• ${p.nombre}${p.marca ? ` (${p.marca})` : ''} — Cantidad: ${qty}`);
+    if (p) lines.push(`• ${p.nombre} — Cantidad: ${qty}`);
   });
   if (nombre || empresa) {
     lines.push('');

@@ -637,15 +637,6 @@ h1, h2, h3 { font-family: var(--font-head); margin: 0; }
   padding: 16px 18px 18px;
 }
 
-.card-brand {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  min-height: 16px;
-}
-
 .card h3 {
   font-size: 17px;
   font-weight: 700;
@@ -1158,8 +1149,6 @@ dialog { color: var(--ink); }
 }
 
 .pm-info h3 { font-size: 30px; font-weight: 800; line-height: 1.1; color: var(--navy); }
-.pm-brand { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
-.pm-brand:empty { display: none; }
 .pm-desc { margin: 0; color: var(--muted); font-size: 16px; }
 
 .pm-details {
