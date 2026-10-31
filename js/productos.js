@@ -115,7 +115,7 @@ const PRODUCTOS = [
   {
     id: 'gorro',
     nombre: 'Gorro desechable tipo oruga',
-    categoria: 'pies',
+    categoria: 'cabeza',
     fotos: 1,
     descripcion: 'Gorro desechable en tela no tejida con elástico.',
     detalles: ['Tela no tejida', 'Con elástico', 'Color azul'],
