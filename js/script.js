@@ -17,6 +17,7 @@ const CATEGORIA_FOTO = {
   respiratoria: 'mascara-facial',
   manos: 'guantes-nitrilo',
   pies: 'bota',
+  dotacion: 'polo-dama',
   emergencias: 'botiquin',
 };
 
